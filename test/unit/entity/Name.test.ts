@@ -5,4 +5,8 @@ describe('Name', () => {
     const name = new Name('username')
     expect(name.getValue()).toBe('username')
   })
+
+  test('Deve validar o username', () => {
+    expect(() => new Name('user name')).toThrow(new Error('Invalid username'))
+  })
 })
