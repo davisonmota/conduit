@@ -32,6 +32,14 @@ describe('Password', () => {
     expect(password.getValue()).not.toBe('plainPassword')
   })
 
+  test('Deve restaurar a senha criptografada', async () => {
+    const bcryptAdapter = new BcryptAdapter()
+    const password = await Password.create('plainPassword', bcryptAdapter, bcryptAdapter)
+    const passwordHashed = password.getValue()
+    const restorePassword = Password.restore(passwordHashed, bcryptAdapter)
+    expect(restorePassword).toEqual(password)
+  })
+
   test('Não deve validar a senha criptografada com a senha aberta incorreta', async () => {
     const bcryptAdapter = new BcryptAdapter()
     const password = await Password.create('plainPassword', bcryptAdapter, bcryptAdapter)

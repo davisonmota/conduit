@@ -4,13 +4,16 @@ import type Hash from '../service/Hash'
 export default class Password {
   constructor (
     private readonly passwordHash: string,
-    readonly hashService: Hash,
-    readonly compareService: Compare
+    private readonly compareService: Compare
   ) {}
 
   static async create (plainPassword: string, hashService: Hash, compareService: Compare): Promise<Password> {
     const passwordHash = await hashService.hash(plainPassword)
-    return new Password(passwordHash, hashService, compareService)
+    return new Password(passwordHash, compareService)
+  }
+
+  static restore (passwordHash: string, compareService: Compare): Password {
+    return new Password(passwordHash, compareService)
   }
 
   async validate (value: string): Promise<boolean> {
