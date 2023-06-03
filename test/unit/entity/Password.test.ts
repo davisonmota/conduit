@@ -31,4 +31,12 @@ describe('Password', () => {
     expect(match).toBe(true)
     expect(password.getValue()).not.toBe('plainPassword')
   })
+
+  test('Não deve validar a senha criptografada com a senha aberta incorreta', async () => {
+    const bcryptAdapter = new BcryptAdapter()
+    const password = await Password.create('plainPassword', bcryptAdapter, bcryptAdapter)
+    const match = await password.validate('incorrectPassword')
+    expect(match).toBe(false)
+    expect(password.getValue()).not.toBe('plainPassword')
+  })
 })
