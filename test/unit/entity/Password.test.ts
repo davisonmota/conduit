@@ -24,6 +24,12 @@ describe('Password', () => {
     expect(password.getValue()).toBe('any_hash')
   })
 
+  test('Não deve criar senha com menos de 8 caracteres', async () => {
+    const bcryptAdapter = new BcryptAdapter()
+    const promise = Password.create('123456', bcryptAdapter, bcryptAdapter)
+    await expect(promise).rejects.toThrow(new Error('Invalid password'))
+  })
+
   test('Deve validar a senha criptografada com a senha aberta', async () => {
     const bcryptAdapter = new BcryptAdapter()
     const password = await Password.create('plainPassword', bcryptAdapter, bcryptAdapter)

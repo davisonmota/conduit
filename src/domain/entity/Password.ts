@@ -8,6 +8,7 @@ export default class Password {
   ) {}
 
   static async create (plainPassword: string, hashService: Hash, compareService: Compare): Promise<Password> {
+    if (plainPassword.length < 8) throw new Error('Invalid password')
     const passwordHash = await hashService.hash(plainPassword)
     return new Password(passwordHash, compareService)
   }
