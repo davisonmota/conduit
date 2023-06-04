@@ -1,24 +1,22 @@
-import type Compare from '../service/Compare'
-import type Hash from '../service/Hash'
-
+import { hash, compare } from 'bcrypt'
 export default class Password {
-  constructor (
-    private readonly passwordHash: string,
-    private readonly compareService: Compare
+  private constructor (
+    private readonly passwordHash: string
   ) {}
 
-  static async create (plainPassword: string, hashService: Hash, compareService: Compare): Promise<Password> {
+  static async create (plainPassword: string): Promise<Password> {
     if (plainPassword.length < 8) throw new Error('Invalid password')
-    const passwordHash = await hashService.hash(plainPassword)
-    return new Password(passwordHash, compareService)
+    const salt = 10
+    const passwordHash = await hash(plainPassword, salt)
+    return new Password(passwordHash)
   }
 
-  static restore (passwordHash: string, compareService: Compare): Password {
-    return new Password(passwordHash, compareService)
+  static restore (passwordHash: string): Password {
+    return new Password(passwordHash)
   }
 
   async validate (value: string): Promise<boolean> {
-    const match = await this.compareService.compare(value, this.passwordHash)
+    const match = await compare(value, this.passwordHash)
     return match
   }
 
