@@ -11,7 +11,12 @@ export default class TokenGenerator {
     )
   }
 
-  validate (token: string): any {
-    return verify(token, this.key)
+  async validate (token: string): Promise<any> {
+    return await new Promise((resolve, reject) => {
+      verify(token, this.key, (err, decoded) => {
+        if (err) reject(new Error('Invalid token'))
+        resolve(decoded)
+      })
+    })
   }
 }
