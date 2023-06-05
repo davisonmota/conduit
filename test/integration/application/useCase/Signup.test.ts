@@ -61,4 +61,22 @@ describe('Signup', () => {
     })
     await expect(promise).rejects.toThrow(new Error('Username already exist'))
   })
+
+  test('Não deve fazer signup se email já estiver em uso', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+
+    await signup.execute({
+      username: 'davison',
+      email: 'davison@gmail.com',
+      password: '123456789'
+    })
+
+    const promise = signup.execute({
+      username: 'other-user-name',
+      email: 'davison@gmail.com',
+      password: '987654321'
+    })
+    await expect(promise).rejects.toThrow(new Error('Email already in use'))
+  })
 })
