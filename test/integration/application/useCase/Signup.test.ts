@@ -1,11 +1,30 @@
+import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import Signup from '../../../../src/application/useCase/Signup'
-import UserRepositoryMemory from '../../../../src/infra/repository/memory/UserRepositoryMemory'
+import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
+
+const prisma = new PrismaClient()
 
 describe('Signup', () => {
+  beforeAll(async () => {
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await prisma.$disconnect()
+  })
+
+  beforeEach(async () => {
+    await prisma.user.deleteMany()
+  })
+
+  afterEach(async () => {
+    await prisma.user.deleteMany()
+  })
+
   test('Deve fazer signup', async () => {
-    const userRepository = new UserRepositoryMemory()
-    const signup = new Signup(userRepository, userRepository, userRepository)
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
     const inputSignup = {
       username: 'davison',
       email: 'davison@gmail.com',

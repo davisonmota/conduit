@@ -17,12 +17,24 @@ export default class User {
     return new User(username, email, password)
   }
 
+  static restore (
+    username: Username,
+    email: Email,
+    password: Password
+  ): User {
+    return new User(username, email, password)
+  }
+
   getUsername (): string {
     return this.username.getValue()
   }
 
   getEmail (): string {
     return this.email.getValue()
+  }
+
+  getPassword (): string {
+    return this.password.getValue()
   }
 
   async validatePassword (value: string): Promise<boolean> {

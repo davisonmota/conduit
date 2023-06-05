@@ -1,24 +1,20 @@
 import Email from '../../domain/entity/Email'
-import Name from '../../domain/entity/Username'
 import Password from '../../domain/entity/Password'
 import User from '../../domain/entity/User'
+import Name from '../../domain/entity/Username'
 import EmailValidatorAdapter from '../../infra/validator/EmailValidatorAdapter'
-import type EmailQuery from '../query/EmailQuery'
-import type UsernameQuery from '../query/UsernameQuery'
 import type UserRepository from '../repository/UserRepository'
 
 export default class Signup {
   constructor (
-    readonly userRepository: UserRepository,
-    readonly usernameQuery: UsernameQuery,
-    readonly emailQuery: EmailQuery
+    readonly userRepository: UserRepository
   ) {}
 
   async execute (input: Input): Promise<void> {
-    const existUsername = await this.usernameQuery.findUsername(input.username)
-    if (existUsername) throw new Error('Username already exist')
-    const existEmail = await this.emailQuery.findEmail(input.email)
-    if (existEmail) throw new Error('Email already in use')
+    let existUser = await this.userRepository.loadByEmail(input.email)
+    if (existUser) throw new Error('Email already in use')
+    existUser = await this.userRepository.loadByUsername(input.username)
+    if (existUser) throw new Error('Username already exist')
     const user = User.create(
       new Name(input.username),
       new Email(input.email, new EmailValidatorAdapter()),

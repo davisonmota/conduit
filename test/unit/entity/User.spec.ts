@@ -1,14 +1,14 @@
 import Email from '../../../src/domain/entity/Email'
-import Name from '../../../src/domain/entity/Username'
 import Password from '../../../src/domain/entity/Password'
 import User from '../../../src/domain/entity/User'
+import Username from '../../../src/domain/entity/Username'
 import EmailValidatorAdapter from '../../../src/infra/validator/EmailValidatorAdapter'
 
 describe('User', () => {
   test('Deve criar um usuário', async () => {
     const emailValidator = new EmailValidatorAdapter()
     const user = User.create(
-      new Name('username'),
+      new Username('username'),
       new Email('user@gmail.com', emailValidator),
       await Password.create('plainPassword')
     )
