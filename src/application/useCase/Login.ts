@@ -8,7 +8,7 @@ export default class Login {
   async execute (input: Input): Promise<OutPut> {
     const user = await this.userRepository.loadByEmail(input.email)
     if (!(user && await user.validatePassword(input.password))) {
-      throw new Error('Authentication falis')
+      throw new Error('Authentication fails')
     }
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
     const token = tokenGenerator.generate(user, '7d')
