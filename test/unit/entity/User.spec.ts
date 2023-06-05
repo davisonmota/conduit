@@ -1,5 +1,5 @@
 import Email from '../../../src/domain/entity/Email'
-import Name from '../../../src/domain/entity/Name'
+import Name from '../../../src/domain/entity/Username'
 import Password from '../../../src/domain/entity/Password'
 import User from '../../../src/domain/entity/User'
 import EmailValidatorAdapter from '../../../src/infra/validator/EmailValidatorAdapter'
@@ -12,7 +12,7 @@ describe('User', () => {
       new Email('user@gmail.com', emailValidator),
       await Password.create('plainPassword')
     )
-    expect(user.getName()).toBe('username')
+    expect(user.getUsername()).toBe('username')
     expect(user.getEmail()).toBe('user@gmail.com')
     expect(await user.validatePassword('plainPassword')).toBe(true)
   })

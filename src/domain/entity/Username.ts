@@ -1,4 +1,4 @@
-export default class Name {
+export default class Username {
   private readonly value: string
 
   constructor (value: string) {

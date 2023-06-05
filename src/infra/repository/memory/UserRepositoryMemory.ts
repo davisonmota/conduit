@@ -10,14 +10,14 @@ export default class UserRepositoryMemory implements UserRepository, UsernameQue
     this.users = []
   }
 
-  async loadByEmail (email: string): Promise<User> {
-    const user = this.users.find(user => user.getEmail() === email)
+  async loadByEmail (value: string): Promise<User> {
+    const user = this.users.find(user => user.getEmail() === value)
     if (!user) throw new Error('User not found')
     return user
   }
 
-  async findEmail (email: string): Promise<boolean> {
-    const exist = this.users.find(user => user.getEmail() === email)
+  async findEmail (value: string): Promise<boolean> {
+    const exist = this.users.find(user => user.getEmail() === value)
     return !!exist
   }
 
@@ -25,8 +25,7 @@ export default class UserRepositoryMemory implements UserRepository, UsernameQue
     this.users.push(user)
   }
 
-  async findUsername (username: string): Promise<boolean> {
-    const exist = this.users.find(user => user.getName() === username)
-    return !!exist
+  async findUsername (value: string): Promise<boolean> {
+    return !!this.users.find(user => user.getUsername() === value)
   }
 }

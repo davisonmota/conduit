@@ -1,5 +1,5 @@
 import Email from '../../../src/domain/entity/Email'
-import Name from '../../../src/domain/entity/Name'
+import Name from '../../../src/domain/entity/Username'
 import Password from '../../../src/domain/entity/Password'
 import User from '../../../src/domain/entity/User'
 import TokenGenerator from '../../../src/domain/service/TokenGenerator'

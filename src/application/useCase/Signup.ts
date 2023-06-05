@@ -1,5 +1,5 @@
 import Email from '../../domain/entity/Email'
-import Name from '../../domain/entity/Name'
+import Name from '../../domain/entity/Username'
 import Password from '../../domain/entity/Password'
 import User from '../../domain/entity/User'
 import EmailValidatorAdapter from '../../infra/validator/EmailValidatorAdapter'

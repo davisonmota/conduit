@@ -1,4 +1,4 @@
-import Name from '../../../src/domain/entity/Name'
+import Name from '../../../src/domain/entity/Username'
 
 describe('Name', () => {
   test('Deve criar o username', () => {

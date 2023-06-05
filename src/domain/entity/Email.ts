@@ -1,8 +1,11 @@
 import type EmailValidator from '../service/EmailValidator'
 
 export default class Email {
-  constructor (readonly value: string, readonly validator: EmailValidator) {
-    if (!this.validator.isValid(this.value)) throw new Error('Invalid email')
+  private readonly value: string
+
+  constructor (value: string, validator: EmailValidator) {
+    if (!validator.isValid(value)) throw new Error('Invalid email')
+    this.value = value
   }
 
   getValue (): string {
