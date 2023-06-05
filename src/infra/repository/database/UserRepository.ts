@@ -14,7 +14,10 @@ export default class UserRepositoryDatabase implements UserRepository {
       data: {
         username: user.getUsername(),
         email: user.getEmail(),
-        password: user.getPassword()
+        password: user.getPassword(),
+        profile: {
+          create: { bio: 'I like Conduit ;)' }
+        }
       }
     })
   }
