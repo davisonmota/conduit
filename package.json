@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch",
+    "test": "jest --passWithNoTests --runInBand",
+    "test:watch": "npm run test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "npm run test --coverage",
     "prepare": "husky install"
   },
   "repository": {
