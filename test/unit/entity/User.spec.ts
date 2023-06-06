@@ -7,11 +7,11 @@ import EmailValidatorAdapter from '../../../src/infra/validator/EmailValidatorAd
 describe('User', () => {
   test('Deve criar um usuário', async () => {
     const emailValidator = new EmailValidatorAdapter()
-    const user = User.create(
-      new Username('username'),
-      new Email('user@gmail.com', emailValidator),
-      await Password.create('plainPassword')
-    )
+    const user = User.create({
+      username: new Username('username'),
+      email: new Email('user@gmail.com', emailValidator),
+      password: await Password.create('plainPassword')
+    })
     expect(user.getUsername()).toBe('username')
     expect(user.getEmail()).toBe('user@gmail.com')
     expect(await user.validatePassword('plainPassword')).toBe(true)

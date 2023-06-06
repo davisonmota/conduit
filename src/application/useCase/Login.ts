@@ -5,7 +5,7 @@ import env from '../../main/config/env'
 export default class Login {
   constructor (readonly userRepository: UserRepository) {}
 
-  async execute (input: Input): Promise<OutPut> {
+  async execute (input: Input): Promise<UserOutPut> {
     const user = await this.userRepository.loadByEmail(input.email)
     if (!(user && await user.validatePassword(input.password))) {
       throw new Error('Authentication fails')
@@ -15,6 +15,8 @@ export default class Login {
     return {
       username: user.getUsername(),
       email: user.getEmail(),
+      bio: user.getBio(),
+      image: user.getImage(),
       token
     }
   }
@@ -25,10 +27,10 @@ type Input = {
   password: string
 }
 
-type OutPut = {
+type UserOutPut = {
   username: string
   email: string
   token: string
-  bio?: string
-  image?: string
+  bio: string
+  image: string
 }

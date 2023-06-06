@@ -1,7 +1,7 @@
 import Email from '../../domain/entity/Email'
 import Password from '../../domain/entity/Password'
 import User from '../../domain/entity/User'
-import Name from '../../domain/entity/Username'
+import Username from '../../domain/entity/Username'
 import EmailValidatorAdapter from '../../infra/validator/EmailValidatorAdapter'
 import type UserRepository from '../repository/UserRepository'
 
@@ -15,11 +15,11 @@ export default class Signup {
     if (existUser) throw new Error('Email already in use')
     existUser = await this.userRepository.loadByUsername(input.username)
     if (existUser) throw new Error('Username already exist')
-    const user = User.create(
-      new Name(input.username),
-      new Email(input.email, new EmailValidatorAdapter()),
-      await Password.create(input.password)
-    )
+    const user = User.create({
+      username: new Username(input.username),
+      email: new Email(input.email, new EmailValidatorAdapter()),
+      password: await Password.create(input.password)
+    })
     await this.userRepository.save(user)
   }
 }

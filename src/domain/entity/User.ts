@@ -1,43 +1,39 @@
-import type Email from './Email'
-import type Username from './Username'
-import type Password from './Password'
+import type CreateUserModel from '../models/CreateUserModel'
+import type RestoreUserModel from '../models/RestoreUserModel'
+import type UserModel from '../models/UserModel'
 
 export default class User {
-  private constructor (
-    private readonly username: Username,
-    private readonly email: Email,
-    private readonly password: Password
-  ) {}
+  private constructor (private readonly data: UserModel) { }
 
-  static create (
-    username: Username,
-    email: Email,
-    password: Password
-  ): User {
-    return new User(username, email, password)
+  static create ({ email, password, username }: CreateUserModel): User {
+    return new User({ email, password, username })
   }
 
-  static restore (
-    username: Username,
-    email: Email,
-    password: Password
-  ): User {
-    return new User(username, email, password)
+  static restore (userData: RestoreUserModel): User {
+    return new User(userData)
   }
 
   getUsername (): string {
-    return this.username.getValue()
+    return this.data.username.getValue()
   }
 
   getEmail (): string {
-    return this.email.getValue()
+    return this.data.email.getValue()
   }
 
   getPassword (): string {
-    return this.password.getValue()
+    return this.data.password.getValue()
+  }
+
+  getBio (): string {
+    return this.data.bio?.getValue() ?? ''
+  }
+
+  getImage (): string {
+    return this.data.image?.getValue() ?? ''
   }
 
   async validatePassword (value: string): Promise<boolean> {
-    return await this.password.validate(value)
+    return await this.data.password.validate(value)
   }
 }

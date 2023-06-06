@@ -5,6 +5,8 @@ import Username from '../../../domain/entity/Username'
 import Email from '../../../domain/entity/Email'
 import EmailValidatorAdapter from '../../validator/EmailValidatorAdapter'
 import Password from '../../../domain/entity/Password'
+import Bio from '../../../domain/entity/Bio'
+import ImageProfile from '../../../domain/entity/ImageProfile'
 
 export default class UserRepositoryDatabase implements UserRepository {
   constructor (readonly prisma: PrismaClient) {}
@@ -14,10 +16,7 @@ export default class UserRepositoryDatabase implements UserRepository {
       data: {
         username: user.getUsername(),
         email: user.getEmail(),
-        password: user.getPassword(),
-        profile: {
-          create: { bio: 'I like Conduit ;)' }
-        }
+        password: user.getPassword()
       }
     })
   }
@@ -25,20 +24,26 @@ export default class UserRepositoryDatabase implements UserRepository {
   async loadByEmail (email: string): Promise<User | undefined> {
     const userData = await this.prisma.user.findUnique({ where: { email } })
     if (!userData) return
-    return User.restore(
-      new Username(userData.username),
-      new Email(userData.email, new EmailValidatorAdapter()),
-      Password.restore(userData.password)
-    )
+    return User.restore({
+      id: userData.id,
+      bio: new Bio(userData.bio),
+      image: new ImageProfile(userData.image),
+      username: new Username(userData.username),
+      email: new Email(userData.email, new EmailValidatorAdapter()),
+      password: Password.restore(userData.password)
+    })
   }
 
   async loadByUsername (username: string): Promise<User | undefined> {
     const userData = await this.prisma.user.findUnique({ where: { username } })
     if (!userData) return
-    return User.restore(
-      new Username(userData.username),
-      new Email(userData.email, new EmailValidatorAdapter()),
-      Password.restore(userData.password)
-    )
+    return User.restore({
+      id: userData.id,
+      bio: new Bio(userData.bio),
+      image: new ImageProfile(userData.image),
+      username: new Username(userData.username),
+      email: new Email(userData.email, new EmailValidatorAdapter()),
+      password: Password.restore(userData.password)
+    })
   }
 }
