@@ -9,6 +9,6 @@ export default interface UserModel {
   email: Email
   username: Username
   password: Password
-  bio?: Bio
-  image?: ImageProfile
+  bio: Bio
+  image: ImageProfile
 }
