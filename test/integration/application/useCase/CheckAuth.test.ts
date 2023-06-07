@@ -42,4 +42,11 @@ describe('Check Auth', () => {
     const output = await checkAuth.execute(user.token)
     expect(output.username).toBe('davison')
   })
+
+  test('Deve lançar erro se o token for inválido', async () => {
+    const checkAuth = new CheckAuth()
+    const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmlzb24iLCJpYXQiOjE2ODMyMTk2MDAwMDAsImV4cCI6MTY4MzIxOTYwMzYwMH0.uVltzQ9DTiyFgj_j6T6kZEsBNgGueF97FxXz_trUvbr'
+    const promise = checkAuth.execute(invalidToken)
+    await expect(promise).rejects.toThrow(new Error('Invalid token'))
+  })
 })
