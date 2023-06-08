@@ -56,4 +56,20 @@ describe('Update User', () => {
     expect(updatedUser.username).toBe('other-username')
     expect(updatedUser.email).toBe('other@gmail.com')
   })
+
+  test('Deve lançar erro se o usuário não for encontrado', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmlzb24iLCJpYXQiOjE2ODYyNTU0NDY5NDUsImV4cCI6MTY4NjI1NjA1MTc0NX0.oLeLWIpxC-DNZm449Mm5ynkBpGJCFSEdPXJJ8XOdEqU'
+    const checkAuth = new CheckAuth()
+    const updateUser = new UpdateUser(userRepository, checkAuth)
+    const inputUpdateUser = {
+      image: 'http://other-image.com/profile.jpg',
+      bio: 'I love Conduit',
+      password: '987654321',
+      username: 'other-username',
+      email: 'other@gmail.com'
+    }
+    const promise = updateUser.execute(token, inputUpdateUser)
+    await expect(promise).rejects.toThrow(new Error('User not found'))
+  })
 })
