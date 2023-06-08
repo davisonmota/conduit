@@ -4,7 +4,7 @@ import TokenGenerator from '../../domain/service/TokenGenerator'
 import env from '../../main/config/env'
 import type UserRepository from '../repository/UserRepository'
 import type CheckAuth from './CheckAuth'
-import { type UserOutPut } from './Login'
+import { type UserOutPut } from './dto/UserOutPut'
 
 export default class UpdateUser {
   constructor (readonly userRepository: UserRepository, readonly checkAuth: CheckAuth) {}

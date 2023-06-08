@@ -1,6 +1,7 @@
 import TokenGenerator from '../../domain/service/TokenGenerator'
 import type UserRepository from '../repository/UserRepository'
 import env from '../../main/config/env'
+import { type UserOutPut } from './dto/UserOutPut'
 
 export default class Login {
   constructor (readonly userRepository: UserRepository) {}
@@ -25,12 +26,4 @@ export default class Login {
 type Input = {
   email: string
   password: string
-}
-
-export type UserOutPut = {
-  username: string
-  email: string
-  token: string
-  bio: string
-  image: string
 }
