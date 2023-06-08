@@ -1,11 +1,19 @@
 import { hash, compare } from 'bcrypt'
-export default class Password {
-  private constructor (
-    private readonly hash: string
-  ) {}
+import { Property } from './Property'
+export default class Password extends Property {
+  private hash: string
+
+  private constructor (hash: string) {
+    super()
+    this.hash = hash
+  }
+
+  static validate (value: string): void {
+    if (value.length < 8) throw new Error('Invalid password')
+  }
 
   static async create (plainPassword: string): Promise<Password> {
-    if (plainPassword.length < 8) throw new Error('Invalid password')
+    Password.validate(plainPassword)
     const salt = 10
     const hashed = await hash(plainPassword, salt)
     return new Password(hashed)
@@ -15,9 +23,15 @@ export default class Password {
     return new Password(hash)
   }
 
-  async validate (value: string): Promise<boolean> {
+  async compare (value: string): Promise<boolean> {
     const match = await compare(value, this.hash)
     return match
+  }
+
+  async update (value: string): Promise<void> {
+    Password.validate(value)
+    const salt = 10
+    this.hash = await hash(value, salt)
   }
 
   getValue (): string {

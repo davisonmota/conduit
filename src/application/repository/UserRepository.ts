@@ -4,4 +4,5 @@ export default interface UserRepository {
   save(user: User): Promise<void>
   loadByEmail(email: string): Promise<User | undefined>
   loadByUsername(username: string): Promise<User | undefined>
+  update(user: User): Promise<void>
 }

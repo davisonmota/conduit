@@ -14,6 +14,7 @@ export default class UserRepositoryDatabase implements UserRepository {
   async save (user: User): Promise<void> {
     await this.prisma.user.create({
       data: {
+        id: user.getId(),
         username: user.getUsername(),
         email: user.getEmail(),
         password: user.getPassword()
@@ -44,6 +45,19 @@ export default class UserRepositoryDatabase implements UserRepository {
       username: new Username(userData.username),
       email: new Email(userData.email, new EmailValidatorAdapter()),
       password: Password.restore(userData.password)
+    })
+  }
+
+  async update (user: User): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: user.getId() },
+      data: {
+        username: user.getUsername(),
+        email: user.getEmail(),
+        password: user.getPassword(),
+        bio: user.getBio(),
+        image: user.getImage()
+      }
     })
   }
 }

@@ -1,8 +1,9 @@
 import type CreateUserModel from '../models/CreateUserModel'
 import type RestoreUserModel from '../models/RestoreUserModel'
+import { type UpdateUserModel } from '../models/UpdateUserModel'
+import ImageProfile from './ImageProfile'
 import type UserModel from '../models/UserModel'
 import Bio from './Bio'
-import ImageProfile from './ImageProfile'
 
 export default class User {
   private constructor (private readonly data: UserModel) { }
@@ -13,6 +14,14 @@ export default class User {
 
   static restore (userData: RestoreUserModel): User {
     return new User(userData)
+  }
+
+  async update (data: UpdateUserModel): Promise<void> {
+    const validUpdateProperty = ['email', 'password', 'username', 'bio', 'image']
+    for (const property in data) {
+      if (!validUpdateProperty.includes(property)) throw new Error('Invalid param ')
+      if (property !== 'id') await this.data[property].update(data[property])
+    }
   }
 
   getUsername (): string {
@@ -35,7 +44,12 @@ export default class User {
     return this.data.image.getValue()
   }
 
+  getId (): string | undefined {
+    return this.data?.id
+  }
+
   async validatePassword (value: string): Promise<boolean> {
-    return await this.data.password.validate(value)
+    const isValid = await this.data.password.compare(value)
+    return isValid
   }
 }

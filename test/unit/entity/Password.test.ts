@@ -20,7 +20,7 @@ describe('Password', () => {
 
   test('Deve validar a senha criptografada com a senha aberta', async () => {
     const password = await Password.create('plainPassword')
-    const match = await password.validate('plainPassword')
+    const match = await password.compare('plainPassword')
     expect(match).toBe(true)
     expect(password.getValue()).not.toBe('plainPassword')
   })
@@ -34,7 +34,7 @@ describe('Password', () => {
 
   test('Não deve validar a senha criptografada com a senha aberta incorreta', async () => {
     const password = await Password.create('plainPassword')
-    const match = await password.validate('incorrectPassword')
+    const match = await password.compare('incorrectPassword')
     expect(match).toBe(false)
     expect(password.getValue()).not.toBe('plainPassword')
   })

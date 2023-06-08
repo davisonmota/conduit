@@ -27,7 +27,7 @@ type Input = {
   password: string
 }
 
-type UserOutPut = {
+export type UserOutPut = {
   username: string
   email: string
   token: string
