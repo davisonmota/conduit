@@ -5,7 +5,7 @@ export default class TokenGenerator {
   constructor (private readonly key: string) {}
 
   generate (user: User, expiresIn: string | number, issueDate: Date = new Date()): string {
-    return sign({ username: user.getUsername(), iat: issueDate.getTime() },
+    return sign({ username: user.getUsername(), id: user.getId(), iat: issueDate.getTime() },
       this.key,
       { expiresIn, noTimestamp: false }
     )
