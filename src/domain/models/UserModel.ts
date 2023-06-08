@@ -5,7 +5,7 @@ import type Password from '../entity/Password'
 import type Username from '../entity/Username'
 
 export default interface UserModel {
-  id?: string
+  id: string
   email: Email
   username: Username
   password: Password
