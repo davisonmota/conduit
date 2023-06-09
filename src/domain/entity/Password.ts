@@ -1,5 +1,6 @@
 import { hash, compare } from 'bcrypt'
 import { Property } from './Property'
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 export default class Password extends Property {
   private hash: string
 
@@ -9,7 +10,7 @@ export default class Password extends Property {
   }
 
   static validate (value: string): void {
-    if (value.length < 8) throw new Error('Invalid password')
+    if (value.length < 8) throw new InvalidParamError('password')
   }
 
   static async create (plainPassword: string): Promise<Password> {

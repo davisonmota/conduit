@@ -1,4 +1,5 @@
 import Password from '../../../src/domain/entity/Password'
+import { InvalidParamError } from '../../../src/presentation/errors/InvalidParamError'
 
 describe('Password', () => {
   test('Deve criar uma senha', async () => {
@@ -15,7 +16,7 @@ describe('Password', () => {
 
   test('Não deve criar senha com menos de 8 caracteres', async () => {
     const promise = Password.create('123456')
-    await expect(promise).rejects.toThrow(new Error('Invalid password'))
+    await expect(promise).rejects.toThrow(new InvalidParamError('password'))
   })
 
   test('Deve validar a senha criptografada com a senha aberta', async () => {
