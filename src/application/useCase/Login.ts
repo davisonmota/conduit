@@ -12,7 +12,7 @@ export default class Login {
       throw new Error('Authentication fails')
     }
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
-    const token = tokenGenerator.generate(user, '7d')
+    const token = tokenGenerator.generate({ id: user.getId(), username: user.getUsername() }, '7d')
     return {
       username: user.getUsername(),
       email: user.getEmail(),

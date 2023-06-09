@@ -1,11 +1,10 @@
 import { sign, verify } from 'jsonwebtoken'
-import type User from '../entity/User'
 
 export default class TokenGenerator {
   constructor (private readonly key: string) {}
 
-  generate (user: User, expiresIn: string | number, issueDate: Date = new Date()): string {
-    return sign({ username: user.getUsername(), id: user.getId(), iat: issueDate.getTime() },
+  generate ({ username, id }: IdentityUser, expiresIn: string | number, issueDate: Date = new Date()): string {
+    return sign({ username, id, iat: issueDate.getTime() },
       this.key,
       { expiresIn, noTimestamp: false }
     )
@@ -19,4 +18,9 @@ export default class TokenGenerator {
       })
     })
   }
+}
+
+type IdentityUser = {
+  username: string
+  id: string
 }

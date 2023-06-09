@@ -16,7 +16,7 @@ export default class UpdateUser {
     await user.update(data)
     await this.userRepository.update(user)
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
-    const newToken = tokenGenerator.generate(user, '7d')
+    const newToken = tokenGenerator.generate({ id: user.getId(), username: user.getUsername() }, '7d')
     return {
       username: user.getUsername(),
       email: user.getEmail(),
