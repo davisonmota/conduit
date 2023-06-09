@@ -35,4 +35,19 @@ describe('SignupController', () => {
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('username')))
   })
+
+  test('Deve retornar statusCode 400 se o password não for fornecido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const login = new Login(userRepository)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+      body: {
+        email: 'davison@gmail.com',
+        username: 'davison'
+      }
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
+  })
 })
