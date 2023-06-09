@@ -7,7 +7,8 @@
     "test": "jest --passWithNoTests --runInBand",
     "test:watch": "npm run test -- --watch",
     "test:staged": "npm test -- --findRelatedTests",
-    "test:coverage": "npm run test --coverage",
+    "test:coverage": "npx jest --coverage --passWithNoTests --runInBand",
+    "test:watch:cov": "npx jest --coverage --watch --passWithNoTests --runInBand",
     "prepare": "husky install"
   },
   "repository": {

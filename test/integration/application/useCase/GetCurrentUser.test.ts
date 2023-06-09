@@ -53,4 +53,13 @@ describe('GetCurrencyUser', () => {
     expect(currencyUser.bio).toBe('')
     expect(currencyUser.image).toBe('')
   })
+
+  test('Deve lançar erro se o usuário não for encontrado', async () => {
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhdmlzb24iLCJpZCI6IjRjNGZlMjExLWVkZTYtNDM4Ny04ZTc3LWNiNWYyNzk0MDUxOCIsImlhdCI6MTY4NjMzMzQzMjM2MywiZXhwIjoxNjg2MzM0MDM3MTYzfQ.ecrTcDMWvW7kfjGsanEyMcpWPQoOpzqqkbfe5lgxOsw'
+    const userQuery = new UserQueryDatabase(prisma)
+    const checkAuth = new CheckAuth()
+    const getCurrentUser = new GetCurrentUser(userQuery, checkAuth)
+    const promise = getCurrentUser.execute(token)
+    await expect(promise).rejects.toThrow(new Error('User not found'))
+  })
 })
