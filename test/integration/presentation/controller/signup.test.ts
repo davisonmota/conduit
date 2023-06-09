@@ -6,6 +6,7 @@ import SignupController from '../../../../src/presentation/controllers/SignupCon
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
+import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
 
 const prisma = new PrismaClient()
 
@@ -99,5 +100,29 @@ describe('SignupController', () => {
     }
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new EmailInUserError()))
+  })
+
+  test('Deve retornar statusCode 422 se o username já estiver em uso', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const usernameInUse = 'davison'
+    const inputSignup = {
+      username: usernameInUse,
+      email: 'davison@gmail.com',
+      password: '123456789'
+    }
+    await signup.execute(inputSignup)
+
+    const login = new Login(userRepository)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+      body: {
+        email: 'other@gmail.com',
+        username: usernameInUse,
+        password: '123456789'
+      }
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new UsernameInUserError()))
   })
 })

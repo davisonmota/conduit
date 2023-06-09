@@ -2,6 +2,7 @@ import type Login from '../../application/useCase/Login'
 import type Signup from '../../application/useCase/Signup'
 import { EmailInUserError } from '../errors/EmailInUserError'
 import { MissingParamError } from '../errors/MissingParamError'
+import { UsernameInUserError } from '../errors/UsernameInUserError'
 import { badRequest } from '../errors/http-helpers'
 import { type HttpRequest } from '../http/HttpRequest'
 import { type HttpResponse } from '../http/HttpResponse'
@@ -22,6 +23,7 @@ export default class SignupController {
       return await Promise.resolve({ statusCode: 200, body: '' })
     } catch (error) {
       if (error instanceof EmailInUserError) return badRequest(error)
+      if (error instanceof UsernameInUserError) return badRequest(error)
       return await Promise.resolve({ statusCode: 500, body: '' })
     }
   }
