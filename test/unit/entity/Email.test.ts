@@ -1,5 +1,6 @@
 import Email from '../../../src/domain/entity/Email'
 import EmailValidatorAdapter from '../../../src/infra/validator/EmailValidatorAdapter'
+import { InvalidParamError } from '../../../src/presentation/errors/InvalidParamError'
 
 describe('Email', () => {
   test('Deve criar email', () => {
@@ -12,6 +13,6 @@ describe('Email', () => {
     const emailValidator = new EmailValidatorAdapter()
     jest.spyOn(emailValidator, 'isValid').mockReturnValueOnce(false)
     expect(() => new Email('invalid_email@gmail.com', emailValidator))
-      .toThrow(new Error('Invalid email'))
+      .toThrow(new InvalidParamError('email'))
   })
 })

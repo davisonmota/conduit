@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 import { Property } from './Property'
 
 export default class Username extends Property {
@@ -11,7 +12,7 @@ export default class Username extends Property {
 
   static validate (value: string): void {
     if (!value.match(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)) {
-      throw new Error('Invalid username')
+      throw new InvalidParamError('username')
     }
   }
 

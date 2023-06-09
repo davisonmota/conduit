@@ -1,4 +1,5 @@
 import ImageProfile from '../../../src/domain/entity/ImageProfile'
+import { InvalidParamError } from '../../../src/presentation/errors/InvalidParamError'
 
 describe('Image profile url', () => {
   test('Deve validar se é uma url', () => {
@@ -7,6 +8,6 @@ describe('Image profile url', () => {
   })
 
   test('Deve lançar erro se a url for inválida', () => {
-    expect(() => new ImageProfile('http/image-profile.com/image.jpg')).toThrow(new Error('Invalid url image profile'))
+    expect(() => new ImageProfile('http/image-profile.com/image.jpg')).toThrow(new InvalidParamError('url image profile'))
   })
 })

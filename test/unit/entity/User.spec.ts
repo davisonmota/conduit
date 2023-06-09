@@ -3,6 +3,7 @@ import Password from '../../../src/domain/entity/Password'
 import User from '../../../src/domain/entity/User'
 import Username from '../../../src/domain/entity/Username'
 import EmailValidatorAdapter from '../../../src/infra/validator/EmailValidatorAdapter'
+import { InvalidParamError } from '../../../src/presentation/errors/InvalidParamError'
 
 describe('User', () => {
   test('Deve criar um usuário', async () => {
@@ -17,7 +18,7 @@ describe('User', () => {
     expect(await user.validatePassword('plainPassword')).toBe(true)
   })
 
-  test('Dev lançar erro se algum parâmetro invalida for fornecido para update', async () => {
+  test('Deve lançar erro se algum parâmetro invalido for fornecido para update', async () => {
     const emailValidator = new EmailValidatorAdapter()
     const user = User.create({
       username: new Username('username'),
@@ -28,6 +29,6 @@ describe('User', () => {
       password: '987654321',
       invalidParam: 'other-username'
     })
-    await expect(promise).rejects.toThrow(new Error('Invalid param'))
+    await expect(promise).rejects.toThrow(new InvalidParamError('invalidParam'))
   })
 })

@@ -4,6 +4,7 @@ import ImageProfile from './ImageProfile'
 import type UserModel from '../models/UserModel'
 import Bio from './Bio'
 import { v4 as uuid } from 'uuid'
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 export default class User {
   private constructor (private readonly data: UserModel) { }
 
@@ -18,7 +19,7 @@ export default class User {
   async update (data: UpdateUserModel): Promise<void> {
     const validUpdateProperty = ['email', 'password', 'username', 'bio', 'image']
     for (const property in data) {
-      if (!validUpdateProperty.includes(property)) throw new Error('Invalid param')
+      if (!validUpdateProperty.includes(property)) throw new InvalidParamError(property)
       if (property !== 'id') await this.data[property].update(data[property])
     }
   }

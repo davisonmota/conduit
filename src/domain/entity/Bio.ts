@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 import { Property } from './Property'
 
 export default class Bio extends Property {
@@ -9,7 +10,7 @@ export default class Bio extends Property {
   }
 
   static validate (value: string): void {
-    if (value.length > 255) throw new Error('Invalid bio')
+    if (value.length > 255) throw new InvalidParamError('bio')
   }
 
   getValue (): string {

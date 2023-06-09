@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 import type EmailValidator from '../service/EmailValidator'
 import { Property } from './Property'
 
@@ -13,7 +14,7 @@ export default class Email extends Property {
   }
 
   static validate (value: string, validator: EmailValidator): void {
-    if (!validator.isValid(value)) throw new Error('Invalid email')
+    if (!validator.isValid(value)) throw new InvalidParamError('email')
   }
 
   update (value: string): void {

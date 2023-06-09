@@ -1,4 +1,5 @@
 import Username from '../../../src/domain/entity/Username'
+import { InvalidParamError } from '../../../src/presentation/errors/InvalidParamError'
 
 describe('Name', () => {
   test('Deve criar o username', () => {
@@ -7,6 +8,6 @@ describe('Name', () => {
   })
 
   test('Deve validar o username', () => {
-    expect(() => new Username('user name')).toThrow(new Error('Invalid username'))
+    expect(() => new Username('user name')).toThrow(new InvalidParamError('username'))
   })
 })
