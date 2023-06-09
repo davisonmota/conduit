@@ -27,3 +27,12 @@ export const forbidden = (error: Error): HttpResponse => ({
     }
   }
 })
+
+export const serverError = (): HttpResponse => ({
+  statusCode: 500,
+  body: {
+    errors: {
+      body: ['Invernal server error']
+    }
+  }
+})
