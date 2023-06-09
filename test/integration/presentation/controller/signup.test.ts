@@ -6,7 +6,7 @@ import SignupController from '../../../../src/presentation/controllers/SignupCon
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
-import { badRequest } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 
 const prisma = new PrismaClient()
@@ -128,7 +128,7 @@ describe('SignupController', () => {
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
+    expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError('email')))
   })
 
   test('Deve retornar statusCode 422 se o username for inválido', async () => {
@@ -144,7 +144,7 @@ describe('SignupController', () => {
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('username')))
+    expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError('username')))
   })
 
   test('Deve retornar statusCode 422 se o password for inválido (menor que 8 caracteres)', async () => {
@@ -160,6 +160,6 @@ describe('SignupController', () => {
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
+    expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError('password')))
   })
 })
