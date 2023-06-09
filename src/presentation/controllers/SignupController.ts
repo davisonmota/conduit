@@ -9,14 +9,15 @@ export default class SignupController {
   constructor (readonly signupUseCase: Signup, readonly loginUseCase: Login) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { email, username, password } = httpRequest.body
+    const requiredField = ['email', 'username', 'password']
+    const body = httpRequest.body
     try {
-      if (!email) return badRequest(new MissingParamError('email'))
-      if (!username) return badRequest(new MissingParamError('username'))
-      if (!password) return badRequest(new MissingParamError('password'))
+      for (const field of requiredField) {
+        if (!body[field]) return badRequest(new MissingParamError(`${field}`))
+      }
+      return await Promise.resolve({ statusCode: 200, body: '' })
     } catch (error) {
-
+      return await Promise.resolve({ statusCode: 500, body: '' })
     }
-    return await Promise.resolve({ statusCode: 200, body: '' })
   }
 }
