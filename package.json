@@ -9,6 +9,7 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:coverage": "npx jest --coverage --passWithNoTests --runInBand",
     "test:watch:cov": "npx jest --coverage --watch --passWithNoTests --runInBand",
+    "lint": "npx eslint ./src ./test",
     "prepare": "husky install"
   },
   "repository": {
