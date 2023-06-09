@@ -9,6 +9,17 @@ import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 const prisma = new PrismaClient()
 
 describe('SignupController', () => {
+  test('Deve retornar statusCode 400 se o body não for fornecido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const login = new Login(userRepository)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
+  })
+
   test('Deve retornar statusCode 400 se o email não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)

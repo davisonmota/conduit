@@ -12,6 +12,7 @@ export default class SignupController {
     const requiredField = ['email', 'username', 'password']
     const body = httpRequest.body
     try {
+      if (!body) return badRequest(new MissingParamError('body'))
       for (const field of requiredField) {
         if (!body[field]) return badRequest(new MissingParamError(`${field}`))
       }
