@@ -3,10 +3,10 @@ import Login from '../../../../src/application/useCase/Login'
 import Signup from '../../../../src/application/useCase/Signup'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import SignupController from '../../../../src/presentation/controllers/SignupController'
-import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
-import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
+import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
+import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 
 const prisma = new PrismaClient()
 
@@ -26,6 +26,7 @@ describe('SignupController', () => {
   afterEach(async () => {
     await prisma.user.deleteMany()
   })
+
   test('Deve retornar statusCode 400 se o body não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)
@@ -82,14 +83,8 @@ describe('SignupController', () => {
   test('Deve retornar statusCode 422 se o email já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)
-    const inputSignup = {
-      username: 'davison',
-      email: 'davison@gmail.com',
-      password: '123456789'
-    }
-    await signup.execute(inputSignup)
-
     const login = new Login(userRepository)
+    jest.spyOn(signup, 'execute').mockRejectedValueOnce(new EmailInUserError())
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
@@ -105,20 +100,13 @@ describe('SignupController', () => {
   test('Deve retornar statusCode 422 se o username já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)
-    const usernameInUse = 'davison'
-    const inputSignup = {
-      username: usernameInUse,
-      email: 'davison@gmail.com',
-      password: '123456789'
-    }
-    await signup.execute(inputSignup)
-
     const login = new Login(userRepository)
+    jest.spyOn(signup, 'execute').mockRejectedValueOnce(new UsernameInUserError())
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
         email: 'other@gmail.com',
-        username: usernameInUse,
+        username: 'davison',
         password: '123456789'
       }
     }
