@@ -9,9 +9,10 @@ export default class SignupController {
   constructor (readonly signupUseCase: Signup, readonly loginUseCase: Login) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { email } = httpRequest.body
+    const { email, username } = httpRequest.body
     try {
       if (!email) return badRequest(new MissingParamError('email'))
+      if (!username) return badRequest(new MissingParamError('username'))
     } catch (error) {
 
     }
