@@ -7,6 +7,7 @@ import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUse
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
 import { badRequest } from '../../../../src/presentation/errors/http-helpers'
+import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 
 const prisma = new PrismaClient()
 
@@ -112,5 +113,21 @@ describe('SignupController', () => {
     }
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new UsernameInUserError()))
+  })
+
+  test('Deve retornar statusCode 422 se o email for inválido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const login = new Login(userRepository)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+      body: {
+        email: 'invalid-email#gmail.com',
+        username: 'valid-username',
+        password: '123456789'
+      }
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 })
