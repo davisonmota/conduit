@@ -146,4 +146,20 @@ describe('SignupController', () => {
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('username')))
   })
+
+  test('Deve retornar statusCode 422 se o password for inválido (menor que 8 caracteres)', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const login = new Login(userRepository)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+      body: {
+        email: 'valid@gmail.com',
+        username: 'valid-username',
+        password: '123456'
+      }
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
+  })
 })
