@@ -9,6 +9,21 @@ import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 const prisma = new PrismaClient()
 
 describe('SignupController', () => {
+  beforeAll(async () => {
+    await prisma.$connect()
+  })
+
+  afterAll(async () => {
+    await prisma.$disconnect()
+  })
+
+  beforeEach(async () => {
+    await prisma.user.deleteMany()
+  })
+
+  afterEach(async () => {
+    await prisma.user.deleteMany()
+  })
   test('Deve retornar statusCode 400 se o body não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)

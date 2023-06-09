@@ -3,6 +3,7 @@ import Password from '../../domain/entity/Password'
 import User from '../../domain/entity/User'
 import Username from '../../domain/entity/Username'
 import EmailValidatorAdapter from '../../infra/validator/EmailValidatorAdapter'
+import { EmailInUserError } from '../../presentation/errors/EmailInUserError'
 import type UserRepository from '../repository/UserRepository'
 
 export default class Signup {
@@ -12,7 +13,7 @@ export default class Signup {
 
   async execute (input: Input): Promise<void> {
     let existUser = await this.userRepository.loadByEmail(input.email)
-    if (existUser) throw new Error('Email already in use')
+    if (existUser) throw new EmailInUserError()
     existUser = await this.userRepository.loadByUsername(input.username)
     if (existUser) throw new Error('Username already exist')
     const user = User.create({
