@@ -1,5 +1,6 @@
 import type Login from '../../application/useCase/Login'
 import type Signup from '../../application/useCase/Signup'
+import { EmailInUserError } from '../errors/EmailInUserError'
 import { MissingParamError } from '../errors/MissingParamError'
 import { badRequest } from '../errors/http-helpers'
 import { type HttpRequest } from '../http/HttpRequest'
@@ -16,8 +17,11 @@ export default class SignupController {
       for (const field of requiredField) {
         if (!body[field]) return badRequest(new MissingParamError(`${field}`))
       }
+      const { email, username, password } = body
+      await this.signupUseCase.execute({ email, username, password })
       return await Promise.resolve({ statusCode: 200, body: '' })
     } catch (error) {
+      if (error instanceof EmailInUserError) return badRequest(error)
       return await Promise.resolve({ statusCode: 500, body: '' })
     }
   }
