@@ -1,14 +1,14 @@
 import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import Signup from '../../../../src/application/useCase/Signup'
+import { type UserOutPut } from '../../../../src/application/useCase/dto/UserOutPut'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import SignupController from '../../../../src/presentation/controllers/SignupController'
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
+import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
-import { badRequest, created, ok, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
-import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
-import { type UserOutPut } from '../../../../src/application/useCase/dto/UserOutPut'
+import { badRequest, created, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 
 const prisma = new PrismaClient()
 
