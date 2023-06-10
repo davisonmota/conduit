@@ -36,3 +36,10 @@ export const serverError = (): HttpResponse => ({
     }
   }
 })
+
+export const ok = (data: any): HttpResponse => ({
+  statusCode: 200,
+  body: {
+    ...data
+  }
+})

@@ -6,8 +6,9 @@ import SignupController from '../../../../src/presentation/controllers/SignupCon
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
-import { badRequest, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, ok, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
+import { type UserOutPut } from '../../../../src/application/useCase/dto/UserOutPut'
 
 const prisma = new PrismaClient()
 
@@ -178,5 +179,36 @@ describe('SignupController', () => {
     }
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Deve retornar statusCode 200 com usuário logado', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    const login = new Login(userRepository)
+    jest.spyOn(signup, 'execute').mockResolvedValueOnce()
+    const userOutput: UserOutPut = {
+      email: 'valid@gmail.com',
+      username: 'valid-username',
+      bio: 'any bio',
+      image: 'http://image.com/any-profile.png',
+      token: 'valid-token'
+    }
+    jest.spyOn(login, 'execute').mockResolvedValueOnce(userOutput)
+    const signupController = new SignupController(signup, login)
+    const httpRequest = {
+      body: {
+        email: 'valid@gmail.com',
+        username: 'valid-username',
+        password: '123456789'
+      }
+    }
+    const httpResponse = await signupController.handle(httpRequest)
+    expect(httpResponse).toEqual(ok({
+      email: 'valid@gmail.com',
+      username: 'valid-username',
+      bio: 'any bio',
+      image: 'http://image.com/any-profile.png',
+      token: 'valid-token'
+    }))
   })
 })

@@ -4,7 +4,7 @@ import { EmailInUserError } from '../errors/EmailInUserError'
 import { InvalidParamError } from '../errors/InvalidParamError'
 import { MissingParamError } from '../errors/MissingParamError'
 import { UsernameInUserError } from '../errors/UsernameInUserError'
-import { badRequest, serverError, unprocessableContent } from '../errors/http-helpers'
+import { badRequest, ok, serverError, unprocessableContent } from '../errors/http-helpers'
 import { type HttpRequest } from '../http/HttpRequest'
 import { type HttpResponse } from '../http/HttpResponse'
 
@@ -21,8 +21,8 @@ export default class SignupController {
       }
       const { email, username, password } = body
       await this.signupUseCase.execute({ email, username, password })
-      await this.loginUseCase.execute({ email, password })
-      return await Promise.resolve({ statusCode: 200, body: '' })
+      const user = await this.loginUseCase.execute({ email, password })
+      return ok(user)
     } catch (error) {
       if (error instanceof EmailInUserError) return badRequest(error)
       if (error instanceof UsernameInUserError) return badRequest(error)
