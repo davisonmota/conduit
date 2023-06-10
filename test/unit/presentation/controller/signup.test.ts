@@ -6,7 +6,7 @@ import SignupController from '../../../../src/presentation/controllers/SignupCon
 import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
-import { badRequest, ok, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, created, ok, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 import { type UserOutPut } from '../../../../src/application/useCase/dto/UserOutPut'
 
@@ -203,7 +203,7 @@ describe('SignupController', () => {
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
-    expect(httpResponse).toEqual(ok({
+    expect(httpResponse).toEqual(created({
       email: 'valid@gmail.com',
       username: 'valid-username',
       bio: 'any bio',

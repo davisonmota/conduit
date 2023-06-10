@@ -4,11 +4,12 @@ import { EmailInUserError } from '../errors/EmailInUserError'
 import { InvalidParamError } from '../errors/InvalidParamError'
 import { MissingParamError } from '../errors/MissingParamError'
 import { UsernameInUserError } from '../errors/UsernameInUserError'
-import { badRequest, ok, serverError, unprocessableContent } from '../errors/http-helpers'
+import { badRequest, created, ok, serverError, unprocessableContent } from '../errors/http-helpers'
 import { type HttpRequest } from '../http/HttpRequest'
 import { type HttpResponse } from '../http/HttpResponse'
+import type Controller from './Controller'
 
-export default class SignupController {
+export default class SignupController implements Controller {
   constructor (readonly signupUseCase: Signup, readonly loginUseCase: Login) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -22,7 +23,7 @@ export default class SignupController {
       const { email, username, password } = body
       await this.signupUseCase.execute({ email, username, password })
       const user = await this.loginUseCase.execute({ email, password })
-      return ok(user)
+      return created(user)
     } catch (error) {
       if (error instanceof EmailInUserError) return badRequest(error)
       if (error instanceof UsernameInUserError) return badRequest(error)
