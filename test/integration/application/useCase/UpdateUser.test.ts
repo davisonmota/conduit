@@ -47,14 +47,14 @@ describe('Update User', () => {
 
     const checkAuth = new CheckAuth()
     const updateUser = new UpdateUser(userRepository, checkAuth)
-    const updatedUser = await updateUser.execute(user.token, inputUpdateUser)
+    const updatedUser = await updateUser.execute(user.user.token, inputUpdateUser)
 
-    expect(updatedUser.token).toBeTruthy()
-    expect(updatedUser.token).not.toBe(user.token)
-    expect(updatedUser.image).toBe('http://other-image.com/profile.jpg')
-    expect(updatedUser.bio).toBe('I love Conduit')
-    expect(updatedUser.username).toBe('other-username')
-    expect(updatedUser.email).toBe('other@gmail.com')
+    expect(updatedUser.user.token).toBeTruthy()
+    expect(updatedUser.user.token).not.toBe(user.user.token)
+    expect(updatedUser.user.image).toBe('http://other-image.com/profile.jpg')
+    expect(updatedUser.user.bio).toBe('I love Conduit')
+    expect(updatedUser.user.username).toBe('other-username')
+    expect(updatedUser.user.email).toBe('other@gmail.com')
   })
 
   test('Deve lançar erro se o usuário não for encontrado', async () => {

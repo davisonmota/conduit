@@ -1,18 +1,28 @@
 import { type PrismaClient } from '@prisma/client'
 import type UserQuery from '../../application/Query/UserQuery'
-import { type UserOutPut } from '../../application/useCase/dto/UserOutPut'
 
 export default class UserQueryDatabase implements UserQuery {
   constructor (readonly prisma: PrismaClient) {}
 
-  async findById (id: string): Promise<Omit<UserOutPut, 'token'> | undefined> {
+  async findById (id: string): Promise<UserQueryOutput | undefined> {
     const userData = await this.prisma.user.findUnique({ where: { id } })
     if (!userData) return
     return {
-      username: userData.username,
-      email: userData.email,
-      bio: userData.bio,
-      image: userData.image
+      user: {
+        username: userData.username,
+        email: userData.email,
+        bio: userData.bio,
+        image: userData.image
+      }
     }
+  }
+}
+
+export type UserQueryOutput = {
+  user: {
+    username: string
+    email: string
+    bio: string
+    image: string
   }
 }

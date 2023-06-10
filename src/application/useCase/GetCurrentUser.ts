@@ -14,11 +14,13 @@ export default class GetCurrentUser {
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
     token = tokenGenerator.generate({ id, username }, '7d')
     return {
-      username: currentUser.username,
-      email: currentUser.email,
-      bio: currentUser.bio,
-      image: currentUser.image,
-      token
+      user: {
+        username: currentUser.user.username,
+        email: currentUser.user.email,
+        bio: currentUser.user.bio,
+        image: currentUser.user.image,
+        token
+      }
     }
   }
 }

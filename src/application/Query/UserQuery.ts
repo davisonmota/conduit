@@ -1,5 +1,5 @@
-import { type UserOutPut } from '../useCase/dto/UserOutPut'
+import { type UserQueryOutput } from '../../infra/query/UserQueryDatabase'
 
 export default interface UserQuery {
-  findById(id: string): Promise<Omit<UserOutPut, 'token'> | undefined>
+  findById(id: string): Promise<UserQueryOutput | undefined>
 }

@@ -187,11 +187,13 @@ describe('SignupController', () => {
     const login = new Login(userRepository)
     jest.spyOn(signup, 'execute').mockResolvedValueOnce()
     const userOutput: UserOutPut = {
-      email: 'valid@gmail.com',
-      username: 'valid-username',
-      bio: 'any bio',
-      image: 'http://image.com/any-profile.png',
-      token: 'valid-token'
+      user: {
+        email: 'valid@gmail.com',
+        username: 'valid-username',
+        bio: 'any bio',
+        image: 'http://image.com/any-profile.png',
+        token: 'valid-token'
+      }
     }
     jest.spyOn(login, 'execute').mockResolvedValueOnce(userOutput)
     const signupController = new SignupController(signup, login)
@@ -204,11 +206,13 @@ describe('SignupController', () => {
     }
     const httpResponse = await signupController.handle(httpRequest)
     expect(httpResponse).toEqual(created({
-      email: 'valid@gmail.com',
-      username: 'valid-username',
-      bio: 'any bio',
-      image: 'http://image.com/any-profile.png',
-      token: 'valid-token'
+      user: {
+        email: 'valid@gmail.com',
+        username: 'valid-username',
+        bio: 'any bio',
+        image: 'http://image.com/any-profile.png',
+        token: 'valid-token'
+      }
     }))
   })
 })

@@ -45,13 +45,13 @@ describe('GetCurrencyUser', () => {
     const userQuery = new UserQueryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const getCurrentUser = new GetCurrentUser(userQuery, checkAuth)
-    const token = user.token ?? ''
+    const token = user.user.token ?? ''
     const currencyUser = await getCurrentUser.execute(token)
-    expect(currencyUser.username).toBe('davison')
-    expect(currencyUser.email).toBe('davison@gmail.com')
-    expect(currencyUser.token).toBeTruthy()
-    expect(currencyUser.bio).toBe('')
-    expect(currencyUser.image).toBe('')
+    expect(currencyUser.user.username).toBe('davison')
+    expect(currencyUser.user.email).toBe('davison@gmail.com')
+    expect(currencyUser.user.token).toBeTruthy()
+    expect(currencyUser.user.bio).toBe('')
+    expect(currencyUser.user.image).toBe('')
   })
 
   test('Deve lançar erro se o usuário não for encontrado', async () => {

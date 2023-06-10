@@ -18,11 +18,13 @@ export default class UpdateUser {
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
     const newToken = tokenGenerator.generate({ id: user.getId(), username: user.getUsername() }, '7d')
     return {
-      username: user.getUsername(),
-      email: user.getEmail(),
-      bio: user.getBio(),
-      image: user.getImage(),
-      token: newToken
+      user: {
+        username: user.getUsername(),
+        email: user.getEmail(),
+        bio: user.getBio(),
+        image: user.getImage(),
+        token: newToken
+      }
     }
   }
 }

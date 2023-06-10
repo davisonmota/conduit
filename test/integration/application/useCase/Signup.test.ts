@@ -38,11 +38,11 @@ describe('Signup', () => {
       password: '123456789'
     }
     const user = await login.execute(inputLogin)
-    expect(user.username).toBe('davison')
-    expect(user.email).toBe('davison@gmail.com')
-    expect(user.token).toBeTruthy()
-    expect(user.bio).toBe('')
-    expect(user.image).toBe('')
+    expect(user.user.username).toBe('davison')
+    expect(user.user.email).toBe('davison@gmail.com')
+    expect(user.user.token).toBeTruthy()
+    expect(user.user.bio).toBe('')
+    expect(user.user.image).toBe('')
   })
 
   test('Não deve fazer signup se username já estiver em uso', async () => {

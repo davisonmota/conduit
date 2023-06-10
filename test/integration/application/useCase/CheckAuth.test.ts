@@ -39,7 +39,7 @@ describe('Check Auth', () => {
     })
 
     const checkAuth = new CheckAuth()
-    const output = await checkAuth.execute(user.token)
+    const output = await checkAuth.execute(user.user.token)
     expect(output.username).toBe('davison')
   })
 

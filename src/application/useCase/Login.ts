@@ -14,11 +14,13 @@ export default class Login {
     const tokenGenerator = new TokenGenerator(env.jwtSecret)
     const token = tokenGenerator.generate({ id: user.getId(), username: user.getUsername() }, '7d')
     return {
-      username: user.getUsername(),
-      email: user.getEmail(),
-      bio: user.getBio(),
-      image: user.getImage(),
-      token
+      user: {
+        username: user.getUsername(),
+        email: user.getEmail(),
+        bio: user.getBio(),
+        image: user.getImage(),
+        token
+      }
     }
   }
 }
