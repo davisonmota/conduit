@@ -18,9 +18,9 @@ export default class SignupController implements Controller {
     try {
       if (!body) return badRequest(new MissingParamError('body'))
       for (const field of requiredField) {
-        if (!body[field]) return badRequest(new MissingParamError(`${field}`))
+        if (!body.user[field]) return badRequest(new MissingParamError(`${field}`))
       }
-      const { email, username, password } = body
+      const { email, username, password } = body.user
       await this.signupUseCase.execute({ email, username, password })
       const user = await this.loginUseCase.execute({ email, password })
       return created(user)

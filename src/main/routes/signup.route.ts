@@ -14,6 +14,6 @@ const signupUseCase = new Signup(useRepository)
 const loginUseCase = new Login(useRepository)
 const signupController = new SignupController(signupUseCase, loginUseCase)
 
-signup.post('/signup', adaptRoute(signupController))
+signup.post('/users', adaptRoute(signupController))
 
 export { signup }

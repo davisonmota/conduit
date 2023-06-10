@@ -47,6 +47,7 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
+        user: {}
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -60,7 +61,9 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'davison@gmail.com'
+        user: {
+          email: 'davison@gmail.com'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -74,8 +77,10 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'davison@gmail.com',
-        username: 'davison'
+        user: {
+          email: 'davison@gmail.com',
+          username: 'davison'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -90,9 +95,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'davison@gmail.com',
-        username: 'other-username',
-        password: '123456789'
+        user: {
+          email: 'davison@gmail.com',
+          username: 'other-username',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -107,9 +114,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'other@gmail.com',
-        username: 'davison',
-        password: '123456789'
+        user: {
+          email: 'other@gmail.com',
+          username: 'davison',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -123,9 +132,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'invalid-email#gmail.com',
-        username: 'valid-username',
-        password: '123456789'
+        user: {
+          email: 'invalid-email#gmail.com',
+          username: 'valid-username',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -139,9 +150,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'valid@gmail.com',
-        username: 'invalid username',
-        password: '123456789'
+        user: {
+          email: 'valid@gmail.com',
+          username: 'invalid username',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -155,9 +168,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'valid@gmail.com',
-        username: 'valid-username',
-        password: '123456'
+        user: {
+          email: 'valid@gmail.com',
+          username: 'valid-username',
+          password: '123456'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -172,9 +187,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'valid@gmail.com',
-        username: 'valid-username',
-        password: '123456789'
+        user: {
+          email: 'valid@gmail.com',
+          username: 'valid-username',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -199,9 +216,11 @@ describe('SignupController', () => {
     const signupController = new SignupController(signup, login)
     const httpRequest = {
       body: {
-        email: 'valid@gmail.com',
-        username: 'valid-username',
-        password: '123456789'
+        user: {
+          email: 'valid@gmail.com',
+          username: 'valid-username',
+          password: '123456789'
+        }
       }
     }
     const httpResponse = await signupController.handle(httpRequest)
@@ -213,6 +232,7 @@ describe('SignupController', () => {
         image: 'http://image.com/any-profile.png',
         token: 'valid-token'
       }
-    }))
+    }
+    ))
   })
 })

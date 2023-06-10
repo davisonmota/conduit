@@ -21,14 +21,16 @@ describe('Signup Routes', () => {
     await prisma.user.deleteMany()
   })
 
-  describe('POST /api/signup', () => {
-    test('Deve retornar 201', async () => {
+  describe('POST /api/users', () => {
+    test('Deve retornar 201 ao criar um usuário', async () => {
       await supertest(app)
-        .post('/api/signup')
+        .post('/api/users')
         .send({
-          email: 'davison@gmail.com',
-          username: 'davison',
-          password: '123456789'
+          user: {
+            email: 'davison@gmail.com',
+            username: 'davison',
+            password: '123456789'
+          }
         }).expect(201)
     })
   })
