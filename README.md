@@ -28,3 +28,48 @@ SOLID, Clen code, Security and performance.
 * [ ] GET and display paginated lists of articles
 * [ ] Favorite articles
 * [ ] Follow other users
+
+>To learn more about access [RealWorld](https://realworld-docs.netlify.app/docs/intro).
+
+
+## Running API tests locally
+
+>### Collection Postman
+Use [Postman Collection](./Conduit.postman_collection.json) to API tests locally, to learn more about access [realworld-docs](https://realworld-docs.netlify.app/docs/specs/backend-specs/postman).
+
+Clone project
+
+```bash
+  git clone https://github.com/davisonmota/conduit.git
+```
+
+Enter the project directory
+```bash
+  cd conduit
+```
+
+Install dependencies
+```bash
+  npm install
+```
+Configure database connection url in file **.env**
+```bash
+  DATABASE_URL="postgresql://<user>:<password>@localhost:5432/mydb"
+```
+Run migrations database
+```bash
+  npx prisma migrate dev 
+```
+Start server
+```bash
+  npm run start:dev
+```
+
+Run tests
+```bash
+  npm run test
+```
+Collect coverage 
+```bash
+  npm run test:coverage
+```
