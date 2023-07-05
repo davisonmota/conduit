@@ -23,7 +23,17 @@ export default class UserRepositoryDatabase implements UserRepository {
   }
 
   async loadByEmail (email: string): Promise<User | undefined> {
-    const userData = await this.prisma.user.findUnique({ where: { email } })
+    const userData = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+        image: true,
+        password: true
+      }
+    })
     if (!userData) return
     return User.restore({
       id: userData.id,
@@ -36,7 +46,17 @@ export default class UserRepositoryDatabase implements UserRepository {
   }
 
   async loadByUsername (username: string): Promise<User | undefined> {
-    const userData = await this.prisma.user.findUnique({ where: { username } })
+    const userData = await this.prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+        image: true,
+        password: true
+      }
+    })
     if (!userData) return
     return User.restore({
       id: userData.id,

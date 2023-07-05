@@ -5,7 +5,15 @@ export default class UserQueryDatabase implements UserQuery {
   constructor (readonly prisma: PrismaClient) {}
 
   async findById (id: string): Promise<UserQueryOutput | undefined> {
-    const userData = await this.prisma.user.findUnique({ where: { id } })
+    const userData = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        username: true,
+        email: true,
+        bio: true,
+        image: true
+      }
+    })
     if (!userData) return
     return {
       user: {
