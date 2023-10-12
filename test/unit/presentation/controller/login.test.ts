@@ -32,4 +32,17 @@ describe('SignupController', () => {
     const httpResponse = await loginController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
   })
+
+  test('Deve retornar statusCode 400 se o email não for fornecido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const login = new Login(userRepository)
+    const loginController = new LoginController(login)
+    const httpRequest = {
+      body: {
+        user: {}
+      }
+    }
+    const httpResponse = await loginController.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
+  })
 })
