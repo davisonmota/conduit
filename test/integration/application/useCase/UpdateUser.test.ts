@@ -4,6 +4,7 @@ import UserRepositoryDatabase from '../../../../src/infra/repository/database/Us
 import Login from '../../../../src/application/useCase/Login'
 import CheckAuth from '../../../../src/application/useCase/CheckAuth'
 import UpdateUser from '../../../../src/application/useCase/UpdateUser'
+import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 
 const prisma = new PrismaClient()
 
@@ -71,5 +72,30 @@ describe('Update User', () => {
     }
     const promise = updateUser.execute(token, inputUpdateUser)
     await expect(promise).rejects.toThrow(new Error('User not found'))
+  })
+
+  test('Deve lançar erro InvalidParamError se fornecer parâmetro inválido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signup = new Signup(userRepository)
+    await signup.execute({
+      username: 'davison',
+      email: 'davison@gmail.com',
+      password: '123456789'
+    })
+    const login = new Login(userRepository)
+    const user = await login.execute({
+      email: 'davison@gmail.com',
+      password: '123456789'
+    })
+    const inputUpdateUser = {
+      id: 'invalid-id',
+      otherParamInvalid: 'other-param-invalid'
+    }
+
+    const checkAuth = new CheckAuth()
+    const updateUser = new UpdateUser(userRepository, checkAuth)
+    const promise = updateUser.execute(user.user.token, inputUpdateUser)
+
+    await expect(promise).rejects.toThrow(new InvalidParamError('id'))
   })
 })
