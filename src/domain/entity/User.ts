@@ -20,7 +20,7 @@ export default class User {
     const validUpdateProperty = ['email', 'password', 'username', 'bio', 'image']
     for (const property in data) {
       if (!validUpdateProperty.includes(property)) throw new InvalidParamError(property)
-      if (property !== 'id') await this.data[property].update(data[property])
+      await this.data[property].update(data[property])
     }
   }
 
