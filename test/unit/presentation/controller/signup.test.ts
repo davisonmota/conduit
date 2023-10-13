@@ -29,7 +29,7 @@ describe('SignupController', () => {
     await prisma.user.deleteMany()
   })
 
-  test('Deve retornar statusCode 400 se o body não for fornecido', async () => {
+  test('Deve retornar statusCode 400 se o user não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const signup = new Signup(userRepository)
     const login = new Login(userRepository)
@@ -37,7 +37,7 @@ describe('SignupController', () => {
     const httpRequest = {
     }
     const httpResponse = await signupController.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('user')))
   })
 
   test('Deve retornar statusCode 400 se o email não for fornecido', async () => {

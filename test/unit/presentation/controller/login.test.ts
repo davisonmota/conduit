@@ -32,7 +32,7 @@ describe('SignupController', () => {
     const loginController = new LoginController(login)
     const httpRequest = {}
     const httpResponse = await loginController.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('user')))
   })
 
   test('Deve retornar statusCode 400 se o email não for fornecido', async () => {
