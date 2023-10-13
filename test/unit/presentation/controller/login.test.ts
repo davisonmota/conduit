@@ -4,6 +4,7 @@ import UserRepositoryDatabase from '../../../../src/infra/repository/database/Us
 import LoginController from '../../../../src/presentation/controllers/LoginController'
 import { badRequest } from '../../../../src/presentation/errors/http-helpers'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
+import Signup from '../../../../src/application/useCase/Signup'
 
 const prisma = new PrismaClient()
 
@@ -59,5 +60,31 @@ describe('SignupController', () => {
     }
     const httpResponse = await loginController.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
+  })
+
+  test('Deve retornar statusCode 200 com usuário logado', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signupUseCase = new Signup(userRepository)
+    const user = {
+      email: 'valid@gmail.com',
+      username: 'valid-username',
+      password: '123456789'
+    }
+    await signupUseCase.execute(user)
+
+    const login = new Login(userRepository)
+    const loginController = new LoginController(login)
+    const httpRequest = {
+      body: {
+        user: {
+          email: 'valid@gmail.com',
+          password: '123456789'
+        }
+      }
+    }
+    const httpResponse = await loginController.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body.user.email).toBe('valid@gmail.com')
+    expect(httpResponse.body.user.token).toBeTruthy()
   })
 })

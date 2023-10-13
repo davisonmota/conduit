@@ -15,6 +15,8 @@ export default class LoginController implements Controller {
     for (const field of requiredField) {
       if (!body.user[field]) return badRequest(new MissingParamError(`${field}`))
     }
-    return ok({})
+    const { email, password } = body.user
+    const user = await this.loginUseCase.execute({ email, password })
+    return ok(user)
   }
 }
