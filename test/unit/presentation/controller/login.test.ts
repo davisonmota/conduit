@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import LoginController from '../../../../src/presentation/controllers/LoginController'
-import { badRequest } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, serverError } from '../../../../src/presentation/errors/http-helpers'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import Signup from '../../../../src/application/useCase/Signup'
 
@@ -86,5 +86,24 @@ describe('SignupController', () => {
     expect(httpResponse.statusCode).toBe(200)
     expect(httpResponse.body.user.email).toBe('valid@gmail.com')
     expect(httpResponse.body.user.token).toBeTruthy()
+  })
+
+  test('Deve retornar statusCode 500 com erro inesperado', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const login = new Login(userRepository)
+    jest.spyOn(login, 'execute').mockRejectedValueOnce(new Error())
+    const loginController = new LoginController(login)
+    const httpRequest = {
+      body: {
+        user: {
+          email: 'valid@gmail.com',
+          username: 'valid-username',
+          password: '123456789'
+        }
+      }
+    }
+
+    const httpResponse = await loginController.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError())
   })
 })
