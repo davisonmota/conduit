@@ -2,9 +2,10 @@ import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import LoginController from '../../../../src/presentation/controllers/LoginController'
-import { badRequest, serverError } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import Signup from '../../../../src/application/useCase/Signup'
+import { InvalidCredentials } from '../../../../src/presentation/errors/InvalidCredentials'
 
 const prisma = new PrismaClient()
 
@@ -105,5 +106,29 @@ describe('SignupController', () => {
 
     const httpResponse = await loginController.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Deve retornar statusCode 422 se dados válidos, mas incorretos forem fornecidos', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signupUseCase = new Signup(userRepository)
+    const user = {
+      email: 'valid@gmail.com',
+      username: 'valid-username',
+      password: '123456789'
+    }
+    await signupUseCase.execute(user)
+
+    const login = new Login(userRepository)
+    const loginController = new LoginController(login)
+    const httpRequest = {
+      body: {
+        user: {
+          email: 'incorrect@gmail.com',
+          password: 'incorrect-123456789'
+        }
+      }
+    }
+    const httpResponse = await loginController.handle(httpRequest)
+    expect(httpResponse).toEqual(unprocessableContent(new InvalidCredentials()))
   })
 })
