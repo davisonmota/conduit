@@ -9,7 +9,7 @@ export default class LoginController implements Controller {
   constructor (readonly loginUseCase: Login) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredField = ['email']
+    const requiredField = ['email', 'password']
     const { body } = httpRequest
     if (!body) return badRequest(new MissingParamError('body'))
     for (const field of requiredField) {
