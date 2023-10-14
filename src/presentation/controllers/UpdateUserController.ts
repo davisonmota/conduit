@@ -11,10 +11,11 @@ export default class UpdateUserController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      if (!httpRequest?.header) return badRequest(new MissingParamError('Header'))
+      if (!httpRequest.header) return badRequest(new MissingParamError('Header'))
       const authorization = httpRequest?.header?.Authorization as string
       if (!authorization) return badRequest(new MissingParamError('Authorization'))
       const token = authorization.split('Token ')[1]
+      if (!httpRequest.body) return badRequest(new MissingParamError('body'))
       const body = httpRequest.body
       const updatedUser = await this.updateUserUseCase.execute(token, body.user)
       return ok(updatedUser)

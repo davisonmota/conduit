@@ -151,4 +151,17 @@ describe('UpdateUserController', () => {
     })
     expect(httpResponse).toEqual(badRequest(new MissingParamError('Header')))
   })
+
+  test('Deve retornar statusCode 400 se não fornecer user', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const checkAuth = new CheckAuth()
+    const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const httpResponse = await userUpdateController.handle({
+      header: {
+        Authorization: 'Token validToken'
+      }
+    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
+  })
 })
