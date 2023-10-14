@@ -9,6 +9,7 @@ import { type HttpRequest } from '../../../../src/presentation/http/HttpRequest'
 import { badRequest, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { InvalidTokenError } from '../../../../src/presentation/errors/InvalidTokenError'
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
+import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 
 const prisma = new PrismaClient()
 
@@ -194,5 +195,37 @@ describe('UpdateUserController', () => {
       }
     })
     expect(httpResponse).toEqual(badRequest(new MissingParamError('Empty user')))
+  })
+
+  test('Deve retornar 422 if algum parâmetro do user for inválido', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const signupUseCase = new Signup(userRepository)
+    const userDataCreate = {
+      email: 'valid@gmail.com',
+      username: 'valid-username',
+      password: '123456789'
+    }
+    await signupUseCase.execute(userDataCreate)
+    const loginUseCase = new Login(userRepository)
+    const userLogin = await loginUseCase.execute({ email: 'valid@gmail.com', password: '123456789' })
+    const checkAuth = new CheckAuth()
+    const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+    const updateUserController = new UpdateUserController(updateUserUseCase)
+    const httpRequest: HttpRequest = {
+      header: {
+        Authorization: `Token ${userLogin.user.token}`
+      },
+      body: {
+        user: {
+          email: 'update@gmail.com',
+          username: 'update-username',
+          password: 'update-123456789',
+          bio: 'update bio',
+          image: 'invalidImage'
+        }
+      }
+    }
+    const httpResponse = await updateUserController.handle(httpRequest)
+    expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError('url image profile')))
   })
 })

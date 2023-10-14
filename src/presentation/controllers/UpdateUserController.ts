@@ -1,4 +1,5 @@
 import type UpdateUser from '../../application/useCase/UpdateUser'
+import { InvalidParamError } from '../errors/InvalidParamError'
 import { InvalidTokenError } from '../errors/InvalidTokenError'
 import { MissingParamError } from '../errors/MissingParamError'
 import { badRequest, ok, serverError, unprocessableContent } from '../errors/http-helpers'
@@ -24,6 +25,7 @@ export default class UpdateUserController implements Controller {
       return ok(updatedUser)
     } catch (error) {
       if (error instanceof InvalidTokenError) return unprocessableContent(error)
+      if (error instanceof InvalidParamError) return unprocessableContent(error)
       return serverError()
     }
   }

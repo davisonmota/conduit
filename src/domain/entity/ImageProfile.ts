@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../../presentation/errors/InvalidParamError'
 import { Property } from './Property'
 
 export default class ImageProfile extends Property {
@@ -11,7 +12,7 @@ export default class ImageProfile extends Property {
 
   static validate (value: string): void {
     if (value && !value.match('^(https?|ftp)://[^s/$.?#].[^s]*$')) {
-      throw new Error('Invalid url image profile')
+      throw new InvalidParamError('url image profile')
     }
   }
 
