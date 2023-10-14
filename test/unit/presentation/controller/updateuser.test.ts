@@ -6,6 +6,7 @@ import UpdateUser from '../../../../src/application/useCase/UpdateUser'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import UpdateUserController from '../../../../src/presentation/controllers/UpdateUserController'
 import { type HttpRequest } from '../../../../src/presentation/http/HttpRequest'
+import { serverError } from '../../../../src/presentation/errors/http-helpers'
 
 const prisma = new PrismaClient()
 
@@ -61,6 +62,29 @@ describe('UpdateUserController', () => {
       expect(httpResponse.body.user.bio).toBe('update bio')
       expect(httpResponse.body.user.image).toBe('https://update-image.com/update-image.jpg')
       expect(httpResponse.body.user.token).not.toBe(userLogin.user.token)
+    })
+
+    test('Deve retornar statusCode 500 se ocorrer algum error inesperado', async () => {
+      const userRepository = new UserRepositoryDatabase(prisma)
+      const checkAuth = new CheckAuth()
+      const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+      jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(new Error('Internal server error'))
+      const userUpdateController = new UpdateUserController(updateUserUseCase)
+      const httpResponse = await userUpdateController.handle({
+        header: {
+          Authorization: 'Token anyToken'
+        },
+        body: {
+          user: {
+            email: 'update@gmail.com',
+            username: 'update-username',
+            password: 'update-123456789',
+            bio: 'update bio',
+            image: 'https://update-image.com/update-image.jpg'
+          }
+        }
+      })
+      expect(httpResponse).toEqual(serverError())
     })
   })
 })
