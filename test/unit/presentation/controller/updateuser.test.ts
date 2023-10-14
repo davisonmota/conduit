@@ -11,6 +11,7 @@ import { InvalidTokenError } from '../../../../src/presentation/errors/InvalidTo
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
+import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
 
 const prisma = new PrismaClient()
 
@@ -45,7 +46,7 @@ describe('UpdateUserController', () => {
     const userLogin = await loginUseCase.execute({ email: 'valid@gmail.com', password: '123456789' })
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const updateUserController = new UpdateUserController(updateUserUseCase)
+    const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
         Authorization: `Token ${userLogin.user.token}`
@@ -74,7 +75,8 @@ describe('UpdateUserController', () => {
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
     jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(new Error('Internal server error'))
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
         Authorization: 'Token anyToken'
@@ -96,7 +98,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
         Authorization: 'Token invalidToken'
@@ -118,7 +121,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
       },
@@ -139,7 +143,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
 
       body: {
@@ -159,7 +164,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
         Authorization: 'Token validToken'
@@ -172,7 +178,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
         Authorization: 'Token validToken'
@@ -187,7 +194,8 @@ describe('UpdateUserController', () => {
     const userRepository = new UserRepositoryDatabase(prisma)
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
         Authorization: 'Token validToken'
@@ -213,7 +221,7 @@ describe('UpdateUserController', () => {
     const userLogin = await loginUseCase.execute({ email: 'valid@gmail.com', password: '123456789' })
     const checkAuth = new CheckAuth()
     const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
-    const updateUserController = new UpdateUserController(updateUserUseCase)
+    const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
         Authorization: `Token ${userLogin.user.token}`
@@ -230,5 +238,34 @@ describe('UpdateUserController', () => {
     }
     const httpResponse = await updateUserController.handle(httpRequest)
     expect(httpResponse).toEqual(unprocessableContent(new InvalidParamError('url image profile')))
+  })
+
+  test('Deve retornar 422 username já estiver em uso', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signupUseCase = new Signup(userRepository, verifyExistUser)
+    const userDataCreate = {
+      email: 'valid@gmail.com',
+      username: 'in-use-username',
+      password: '123456789'
+    }
+    await signupUseCase.execute(userDataCreate)
+    const loginUseCase = new Login(userRepository)
+    const userLogin = await loginUseCase.execute({ email: 'valid@gmail.com', password: '123456789' })
+    const checkAuth = new CheckAuth()
+    const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+    const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
+    const httpRequest: HttpRequest = {
+      header: {
+        Authorization: `Token ${userLogin.user.token}`
+      },
+      body: {
+        user: {
+          username: 'in-use-username'
+        }
+      }
+    }
+    const httpResponse = await updateUserController.handle(httpRequest)
+    expect(httpResponse).toEqual(unprocessableContent(new UsernameInUserError()))
   })
 })
