@@ -1,5 +1,6 @@
 import type UpdateUser from '../../application/useCase/UpdateUser'
 import type VerifyExistUser from '../../domain/service/VerifyExistUser'
+import { EmailInUserError } from '../errors/EmailInUserError'
 import { InvalidParamError } from '../errors/InvalidParamError'
 import { InvalidTokenError } from '../errors/InvalidTokenError'
 import { MissingParamError } from '../errors/MissingParamError'
@@ -30,6 +31,7 @@ export default class UpdateUserController implements Controller {
       if (error instanceof InvalidTokenError) return unprocessableContent(error)
       if (error instanceof InvalidParamError) return unprocessableContent(error)
       if (error instanceof UsernameInUserError) return unprocessableContent(error)
+      if (error instanceof EmailInUserError) return unprocessableContent(error)
       return serverError()
     }
   }

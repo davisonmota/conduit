@@ -12,6 +12,7 @@ import { MissingParamError } from '../../../../src/presentation/errors/MissingPa
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
 import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
+import { EmailInUserError } from '../../../../src/presentation/errors/EmailInUserError'
 
 const prisma = new PrismaClient()
 
@@ -267,5 +268,34 @@ describe('UpdateUserController', () => {
     }
     const httpResponse = await updateUserController.handle(httpRequest)
     expect(httpResponse).toEqual(unprocessableContent(new UsernameInUserError()))
+  })
+
+  test('Deve retornar 422 email já estiver em uso', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signupUseCase = new Signup(userRepository, verifyExistUser)
+    const userDataCreate = {
+      email: 'in-use-email@gmail.com',
+      username: 'username',
+      password: '123456789'
+    }
+    await signupUseCase.execute(userDataCreate)
+    const loginUseCase = new Login(userRepository)
+    const userLogin = await loginUseCase.execute({ email: 'in-use-email@gmail.com', password: '123456789' })
+    const checkAuth = new CheckAuth()
+    const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+    const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
+    const httpRequest: HttpRequest = {
+      header: {
+        Authorization: `Token ${userLogin.user.token}`
+      },
+      body: {
+        user: {
+          email: 'in-use-email@gmail.com'
+        }
+      }
+    }
+    const httpResponse = await updateUserController.handle(httpRequest)
+    expect(httpResponse).toEqual(unprocessableContent(new EmailInUserError()))
   })
 })
