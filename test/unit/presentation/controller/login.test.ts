@@ -6,6 +6,7 @@ import { badRequest, serverError, unprocessableContent } from '../../../../src/p
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import Signup from '../../../../src/application/useCase/Signup'
 import { InvalidCredentials } from '../../../../src/presentation/errors/InvalidCredentials'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -65,13 +66,14 @@ describe('LoginController', () => {
 
   test('Deve retornar statusCode 200 com usuário logado', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signupUseCase = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const user = {
       email: 'valid@gmail.com',
       username: 'valid-username',
       password: '123456789'
     }
-    await signupUseCase.execute(user)
+    await signup.execute(user)
 
     const login = new Login(userRepository)
     const loginController = new LoginController(login)
@@ -110,13 +112,14 @@ describe('LoginController', () => {
 
   test('Deve retornar statusCode 422 se dados válidos, mas incorretos forem fornecidos', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signupUseCase = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const user = {
       email: 'valid@gmail.com',
       username: 'valid-username',
       password: '123456789'
     }
-    await signupUseCase.execute(user)
+    await signup.execute(user)
 
     const login = new Login(userRepository)
     const loginController = new LoginController(login)

@@ -3,6 +3,7 @@ import UserRepositoryDatabase from '../../../../src/infra/repository/database/Us
 import Login from '../../../../src/application/useCase/Login'
 import Signup from '../../../../src/application/useCase/Signup'
 import CheckAuth from '../../../../src/application/useCase/CheckAuth'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -25,7 +26,8 @@ describe('Check Auth', () => {
 
   test('Deve verificar se o usuário está autenticado', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     await signup.execute({
       username: 'davison',
       email: 'davison@gmail.com',

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import Signup from '../../../../src/application/useCase/Signup'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -36,7 +37,8 @@ describe('Signup', () => {
 
   test('Não deve fazer login se a senha for incorreta', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const inputSignup = {
       username: 'davison',
       email: 'davison@gmail.com',

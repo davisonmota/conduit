@@ -5,6 +5,7 @@ import Login from '../../../../src/application/useCase/Login'
 import CheckAuth from '../../../../src/application/useCase/CheckAuth'
 import UpdateUser from '../../../../src/application/useCase/UpdateUser'
 import { InvalidParamError } from '../../../../src/presentation/errors/InvalidParamError'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -27,7 +28,8 @@ describe('Update User', () => {
 
   test('Deve atualizar os dados do usuário', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     await signup.execute({
       username: 'davison',
       email: 'davison@gmail.com',
@@ -76,7 +78,8 @@ describe('Update User', () => {
 
   test('Deve lançar erro InvalidParamError se fornecer parâmetro inválido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     await signup.execute({
       username: 'davison',
       email: 'davison@gmail.com',

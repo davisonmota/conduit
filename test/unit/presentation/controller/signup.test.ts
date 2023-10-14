@@ -9,6 +9,7 @@ import { InvalidParamError } from '../../../../src/presentation/errors/InvalidPa
 import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 import { UsernameInUserError } from '../../../../src/presentation/errors/UsernameInUserError'
 import { badRequest, created, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -31,7 +32,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 400 se o user não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -42,7 +44,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 400 se o email não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -56,7 +59,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 400 se o username não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -72,7 +76,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 400 se o password não for fornecido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -89,7 +94,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 422 se o email já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     jest.spyOn(signup, 'execute').mockRejectedValueOnce(new EmailInUserError())
     const signupController = new SignupController(signup, login)
@@ -108,7 +114,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 422 se o username já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     jest.spyOn(signup, 'execute').mockRejectedValueOnce(new UsernameInUserError())
     const signupController = new SignupController(signup, login)
@@ -127,7 +134,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 422 se o email for inválido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -145,7 +153,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 422 se o username for inválido', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -163,7 +172,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 422 se o password for inválido (menor que 8 caracteres)', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     const signupController = new SignupController(signup, login)
     const httpRequest = {
@@ -181,7 +191,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 500 com erro inesperado', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     jest.spyOn(signup, 'execute').mockRejectedValueOnce(new Error())
     const signupController = new SignupController(signup, login)
@@ -200,7 +211,8 @@ describe('SignupController', () => {
 
   test('Deve retornar statusCode 200 com usuário logado', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const login = new Login(userRepository)
     jest.spyOn(signup, 'execute').mockResolvedValueOnce()
     const userOutput: UserOutPut = {

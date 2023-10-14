@@ -5,6 +5,7 @@ import Login from '../../../../src/application/useCase/Login'
 import GetCurrentUser from '../../../../src/application/useCase/GetCurrentUser'
 import UserQueryDatabase from '../../../../src/infra/query/UserQueryDatabase'
 import CheckAuth from '../../../../src/application/useCase/CheckAuth'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -27,7 +28,8 @@ describe('GetCurrencyUser', () => {
 
   test('Deve retornar o usuário atual(logado)', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const inputSignup = {
       username: 'davison',
       email: 'davison@gmail.com',

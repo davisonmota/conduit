@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import Login from '../../../../src/application/useCase/Login'
 import Signup from '../../../../src/application/useCase/Signup'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
+import VerifyExistUser from '../../../../src/domain/service/VerifyExistUser'
 
 const prisma = new PrismaClient()
 
@@ -24,7 +25,8 @@ describe('Signup', () => {
 
   test('Deve fazer signup', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     const inputSignup = {
       username: 'davison',
       email: 'davison@gmail.com',
@@ -47,8 +49,8 @@ describe('Signup', () => {
 
   test('Não deve fazer signup se username já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
-
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     await signup.execute({
       username: 'davison',
       email: 'davison@gmail.com',
@@ -65,8 +67,8 @@ describe('Signup', () => {
 
   test('Não deve fazer signup se email já estiver em uso', async () => {
     const userRepository = new UserRepositoryDatabase(prisma)
-    const signup = new Signup(userRepository)
-
+    const verifyExistUser = new VerifyExistUser(userRepository)
+    const signup = new Signup(userRepository, verifyExistUser)
     await signup.execute({
       username: 'davison',
       email: 'davison@gmail.com',
