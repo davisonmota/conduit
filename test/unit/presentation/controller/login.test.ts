@@ -9,7 +9,7 @@ import { InvalidCredentials } from '../../../../src/presentation/errors/InvalidC
 
 const prisma = new PrismaClient()
 
-describe('SignupController', () => {
+describe('LoginController', () => {
   beforeAll(async () => {
     await prisma.$connect()
   })
