@@ -1,6 +1,7 @@
 import type UpdateUser from '../../application/useCase/UpdateUser'
 import { InvalidTokenError } from '../errors/InvalidTokenError'
-import { ok, serverError, unprocessableContent } from '../errors/http-helpers'
+import { MissingParamError } from '../errors/MissingParamError'
+import { badRequest, ok, serverError, unprocessableContent } from '../errors/http-helpers'
 import { type HttpRequest } from '../http/HttpRequest'
 import { type HttpResponse } from '../http/HttpResponse'
 import type Controller from './Controller'
@@ -11,7 +12,8 @@ export default class UpdateUserController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const body = httpRequest.body
-      const authorization = httpRequest.header.Authorization as string
+      const authorization = httpRequest?.header?.Authorization as string
+      if (!authorization) return badRequest(new MissingParamError('Authorization'))
       const token = authorization.split('Token ')[1]
       const updatedUser = await this.updateUserUseCase.execute(token, body.user)
       return ok(updatedUser)

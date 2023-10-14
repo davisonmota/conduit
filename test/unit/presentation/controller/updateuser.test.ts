@@ -6,8 +6,9 @@ import UpdateUser from '../../../../src/application/useCase/UpdateUser'
 import UserRepositoryDatabase from '../../../../src/infra/repository/database/UserRepository'
 import UpdateUserController from '../../../../src/presentation/controllers/UpdateUserController'
 import { type HttpRequest } from '../../../../src/presentation/http/HttpRequest'
-import { serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
+import { badRequest, serverError, unprocessableContent } from '../../../../src/presentation/errors/http-helpers'
 import { InvalidTokenError } from '../../../../src/presentation/errors/InvalidTokenError'
+import { MissingParamError } from '../../../../src/presentation/errors/MissingParamError'
 
 const prisma = new PrismaClient()
 
@@ -108,5 +109,26 @@ describe('UpdateUserController', () => {
       }
     })
     expect(httpResponse).toEqual(unprocessableContent(new InvalidTokenError()))
+  })
+
+  test('Deve retornar statusCode 400 se não fornecer token (Authorization)', async () => {
+    const userRepository = new UserRepositoryDatabase(prisma)
+    const checkAuth = new CheckAuth()
+    const updateUserUseCase = new UpdateUser(userRepository, checkAuth)
+    const userUpdateController = new UpdateUserController(updateUserUseCase)
+    const httpResponse = await userUpdateController.handle({
+      header: {
+      },
+      body: {
+        user: {
+          email: 'update@gmail.com',
+          username: 'update-username',
+          password: 'update-123456789',
+          bio: 'update bio',
+          image: 'https://update-image.com/update-image.jpg'
+        }
+      }
+    })
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('Authorization')))
   })
 })
