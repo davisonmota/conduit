@@ -50,7 +50,7 @@ describe('UpdateUserController', () => {
     const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
-        Authorization: `Token ${userLogin.user.token}`
+        authorization: `Token ${userLogin.user.token}`
       },
       body: {
         user: {
@@ -80,7 +80,7 @@ describe('UpdateUserController', () => {
     const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
-        Authorization: 'Token anyToken'
+        authorization: 'Token anyToken'
       },
       body: {
         user: {
@@ -103,7 +103,7 @@ describe('UpdateUserController', () => {
     const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
-        Authorization: 'Token invalidToken'
+        authorization: 'Token invalidToken'
       },
       body: {
         user: {
@@ -169,7 +169,7 @@ describe('UpdateUserController', () => {
     const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
-        Authorization: 'Token validToken'
+        authorization: 'Token validToken'
       }
     })
     expect(httpResponse).toEqual(badRequest(new MissingParamError('body')))
@@ -183,7 +183,7 @@ describe('UpdateUserController', () => {
     const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
-        Authorization: 'Token validToken'
+        authorization: 'Token validToken'
       },
       body: {
       }
@@ -199,7 +199,7 @@ describe('UpdateUserController', () => {
     const userUpdateController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpResponse = await userUpdateController.handle({
       header: {
-        Authorization: 'Token validToken'
+        authorization: 'Token validToken'
       },
       body: {
         user: {}
@@ -225,7 +225,7 @@ describe('UpdateUserController', () => {
     const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
-        Authorization: `Token ${userLogin.user.token}`
+        authorization: `Token ${userLogin.user.token}`
       },
       body: {
         user: {
@@ -258,7 +258,7 @@ describe('UpdateUserController', () => {
     const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
-        Authorization: `Token ${userLogin.user.token}`
+        authorization: `Token ${userLogin.user.token}`
       },
       body: {
         user: {
@@ -287,7 +287,7 @@ describe('UpdateUserController', () => {
     const updateUserController = new UpdateUserController(updateUserUseCase, verifyExistUser)
     const httpRequest: HttpRequest = {
       header: {
-        Authorization: `Token ${userLogin.user.token}`
+        authorization: `Token ${userLogin.user.token}`
       },
       body: {
         user: {

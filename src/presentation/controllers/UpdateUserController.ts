@@ -16,7 +16,7 @@ export default class UpdateUserController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       if (!httpRequest.header) return badRequest(new MissingParamError('Header'))
-      const authorization = httpRequest.header.Authorization as string
+      const authorization = httpRequest.header.authorization as string
       if (!authorization) return badRequest(new MissingParamError('Authorization'))
       const token = authorization.split('Token ')[1]
       if (!httpRequest.body) return badRequest(new MissingParamError('body'))
