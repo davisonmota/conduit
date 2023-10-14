@@ -18,7 +18,9 @@ export default class UpdateUserController implements Controller {
       if (!httpRequest.body) return badRequest(new MissingParamError('body'))
       const body = httpRequest.body
       if (!body.user) return badRequest(new MissingParamError('user'))
-      const updatedUser = await this.updateUserUseCase.execute(token, body.user)
+      const user = body.user
+      if (Object.keys(user).length === 0) return badRequest(new MissingParamError('Empty user'))
+      const updatedUser = await this.updateUserUseCase.execute(token, user)
       return ok(updatedUser)
     } catch (error) {
       if (error instanceof InvalidTokenError) return unprocessableContent(error)
